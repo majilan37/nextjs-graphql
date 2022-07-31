@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
+import { useToggleState } from "../context/StateProvider";
 
 const data = [
   {
-    subheader: "Bureau",
     items: [
       {
-        title: "Tableau de bord",
+        title: "Home",
         Icon: <Home className="h-6" />,
         link: "/",
       },
@@ -25,11 +25,12 @@ const data = [
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useToggleState();
   const [width, setWidth] = useState(null);
   useEffect(() => {
     setWidth(window.innerWidth);
   }, []);
+
   return (
     <div className="flex">
       <Slide direction="right" in={isOpen} mountOnEnter unmountOnExit>
@@ -39,15 +40,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           } `}>
           <h1 className="text-3xl text-center">Logo</h1>
           {data.map((item, index) => (
-            <List
-              key={index}
-              className="!mb-2"
-              subheader={
-                <ListSubheader
-                  sx={{ background: "transparent", color: "#fff" }}>
-                  {item.subheader}
-                </ListSubheader>
-              }>
+            <List key={index} className="!mb-2">
               {item.items.map((item, index) => (
                 <Link href={item.link} passHref key={index}>
                   <ListItemButton>

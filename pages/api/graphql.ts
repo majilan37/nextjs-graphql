@@ -1,11 +1,10 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-micro";
-import {
-  buildSchema,
-} from "type-graphql";
+import { buildSchema } from "type-graphql";
+import Cors from "micro-cors";
 import { DogsResolver } from "../../src/schema/dogs.resolver";
 
-
+const cors = Cors({});
 const schema = await buildSchema({
   resolvers: [DogsResolver],
 });
@@ -23,7 +22,7 @@ export const config = {
 
 const startServer = server.start();
 
-export default async function handler(req, res) {
+export default cors(async function handler(req, res) {
   await startServer;
   await server.createHandler({ path: "/api/graphql" })(req, res);
-}
+});

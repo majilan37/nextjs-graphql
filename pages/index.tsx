@@ -5,6 +5,7 @@ import Head from "next/head";
 import Header from "../components/Header";
 import CardDog from "../components/CardDog";
 import Link from "next/link";
+import { useToggleState } from "../context/StateProvider";
 
 export const getServerSideProps: GetServerSideProps = async ({}) => {
   await queryClient.prefetchQuery(["dogs"], () => getDogs());
@@ -17,6 +18,7 @@ export const getServerSideProps: GetServerSideProps = async ({}) => {
 
 export default function Home() {
   const { data, isLoading, isFetching } = useQuery(["dogs"], () => getDogs());
+  const [isOpen] = useToggleState();
   return (
     <>
       <Head>
@@ -25,7 +27,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <div className="grid grid-cols-1 md:grid-cols-2 py-10 lg:grid-cols-3 max-w-5xl mx-auto gap-2 ">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 py-10 ${
+          !isOpen && "place-items-center"
+        } lg:grid-cols-3 max-w-5xl mx-auto gap-2 `}>
         {isFetching || isLoading ? (
           [...new Array(10).fill(0)].map((_, key) => (
             <CardDog key={key} isLoading={isLoading || isFetching} />
